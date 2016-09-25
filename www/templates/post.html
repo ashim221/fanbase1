@@ -1,0 +1,57 @@
+<!--
+  This template loads for the 'post' state (app.js)
+  'post' is a $scope variable created in the PostCtrl controller (controllers.js)
+  The PostCtrl pulls data from Posts Service (service.js)
+  The Posts Service returns post object
+-->
+<ion-view view-title="{{ post.name }}" class="post-detail">
+  <ion-content>
+
+    <div class="main-post item item-avatar no-border">
+      <img ng-src="{{post.face}}" ng-click="viewUser(post.user_id)">
+      <h2 class="post-author" ng-click="viewUser(post.user_id)">
+        {{ post.name }}
+      </h2>
+      <span class="post-time">
+        <i class="ion-ios-timer-outline"></i>
+        {{ post.time }}
+      </span>
+    </div>
+
+    <div class="padding">
+      <img class="full-image" ng-if="post.image" src="{{ post.image }}">
+      <p>{{ post.content | nl2br}}</p>
+
+      <p>
+        <a ng-click="toggleLike(post)" class="subdued">
+          <i class="ion-heart assertive" ng-if="post.liked"></i>
+          <i class="ion-heart" ng-if="!post.liked"></i>
+          {{ post.likeCount}}
+        </a>
+        <a ui-sref="post({postId: post.id})" class="subdued">
+          <i class="ion-chatbox positive"></i>
+          {{ post.commentCount}}
+        </a>
+      </p>
+
+    </div>
+
+    <div class="item item-avatar post-comment" ng-repeat="comment in post.comments">
+      <img ng-src="{{comment.face}}">
+      <h3 class="post-author">
+        {{ comment.name }}
+      </h3>
+      <p>{{ comment.content | nl2br}}</p>
+      <a class="subdued like-count">
+        <i class="ion-heart assertive" ng-if="comment.liked"></i>
+        <i class="ion-heart" ng-if="!comment.liked"></i>
+        {{ comment.likeCount}}
+      </a>
+      <span class="post-time">
+        <i class="ion-ios-timer-outline"></i>
+        {{ comment.time }}
+      </span>
+    </div>
+
+  </ion-content>
+</ion-view>

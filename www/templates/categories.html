@@ -1,0 +1,45 @@
+<!--
+  This template loads for the 'home' state (app.js)
+  'posts' is a $scope variable come from Home controller
+-->
+<ion-view view-title="Categories">
+  <ion-content>
+  <style>
+  .slider {
+  height: 100%;
+}
+.slider-slide {
+  padding-top: 120px;
+  color: #000;
+  background-color: #fff;
+  text-align: center;
+
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+  font-weight: 300;
+}
+  </style>
+  <ion-slide-box on-slide-changed="slideHasChanged($index)">
+	<ion-slide ng-repeat="x in names">
+  		<div class="list card" style="padding:10px;">
+		<div ng-bind-html="x.catName" style="font-size:18px; font-weight:bold">
+		</div>  <br>
+    		 <ul>
+			<li style="float:left; width:150px; padding:10px" ng-repeat="user in x.Users">
+            <a ng-click="viewUser(user.userId)">
+            <img class="profile-picture" src="{{user.userPic}}" width="70%">
+        		<p>{{user.userName | nl2br}}</p>
+             </a>
+             	<p>
+        <a ui-sref="post({postId: post.id})" class="subdued">{{ post.likeCount}} Likes</a>
+        <a ui-sref="post({postId: post.id})" class="subdued">{{ post.commentCount}} Comments</a>
+      </p>
+        </li>
+			
+		</ul>
+        </div>
+        </ion-slide>
+        </ion-slide-box>
+   
+
+  </ion-content>
+</ion-view>

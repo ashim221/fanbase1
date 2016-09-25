@@ -1,0 +1,43 @@
+
+<!--
+  This template loads for the 'notifications' state (app.js)
+  'notifications' is a $scope variable created in the 'NotificationsCtrl' controller (controllers.js)
+  The NotificationsCtrl pulls data from the Notifications service (service.js)
+  The Notifications service returns an array of notifications data
+-->
+<ion-view view-title="Notifications">
+  <ion-content>
+    <div class="list notifications-list">
+      <div class="item no-border" ng-repeat="notification in notifications">
+        <div class="item-body">
+
+          <span class="item-label assertive-bg" ng-if="notification.type == 'liked'">
+            <i class="ion-heart light"></i>
+          </span>
+
+          <span class="item-label calm-bg" ng-if="notification.type == 'commented'">
+            <i class="ion-chatbox light"></i>
+          </span>
+
+          <span class="item-label balanced-bg" ng-if="notification.type == 'friend_request'">
+            <i class="ion-plus light"></i>
+          </span>
+
+          <a ui-sref="user({userId: id})" class="post-author">
+            {{ notification.name }}
+          </a>
+          <span class="notifications-content" ng-if="notification.type == 'liked'">liked your post</span>
+          <span class="notifications-content" ng-if="notification.type == 'commented'">commented on your post</span>
+          <span class="notifications-content" ng-if="notification.type == 'friend_request'">
+            wants to be your friend
+          </span>
+
+          <p class="post-time">
+            <i class="ion-ios-timer-outline"></i>
+            {{ notification.time }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

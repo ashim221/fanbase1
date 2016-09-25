@@ -1,0 +1,36 @@
+<!--
+  This template loads for the 'contacts' state (app.js)
+  'contacts' is a $scope variable come from Contacts controller
+  The ContactsCtrl pulls data from Contacts service (service.js)
+  The Contacts service returns array of contacts data
+-->
+  <ion-view view-title="Contacts">
+    <ion-content>
+      <div class="item-input-inset">
+        <label class="item-input-wrapper">
+          <i class="icon ion-ios-search placeholder-icon"></i>
+          <input type="search" placeholder="Search" autofocus="true">
+        </label>
+      </div>
+      <ion-list class="contact-list">
+        <ion-item class="item-avatar item-icon-right" ng-repeat="contact in contacts" ng-click="viewContact(contact.id)">
+          <img class="profile-picture" src="{{ contact.face }}" alt=""/>
+          <p>
+            <a ui-sref="user({userId: id})" class="post-author">
+              {{ contact.name }}
+            </a>
+            <span class="badge badge-positive" ng-if="contact.group == 'Family'">Family</span>
+            <span class="badge badge-energized" ng-if="contact.group == 'Friend'">Friend</span>
+          </p>
+
+          <i class="icon ion-chevron-right icon-accessory"></i>
+
+          <ion-option-button class="button-stable ion-edit" ng-click="edit(contact)">
+          </ion-option-button>
+          <ion-option-button class="button-assertive ion-android-delete" ng-click="remove(contact)">
+          </ion-option-button>
+
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-view>

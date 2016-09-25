@@ -1,0 +1,69 @@
+<!--
+  This template loads for the 'home' state (app.js)
+  'posts' is a $scope variable come from Home controller
+-->
+<ion-view view-title="Home">
+<style>
+ion-scroll ul {
+  width: 1200px;
+  white-space: nowrap;
+  padding: 10px;
+}
+::-webkit-scrollbar { 
+    display: none; 
+}
+</style>
+  <ion-content class="padding" delegate-handle="mainScroll">
+
+  <div class="list card" ng-repeat="x in names" style="padding:10px;">
+	<div ng-bind-html="x.catName" style="font-size:18px; font-weight:bold"><span ng-if="x.Users.length>2">View More...</span>
+		</div> 
+       <ion-scroll direction="x" zooming="false" delegate-handle="horizontal" horizontal-scroll-fix="mainScroll" ng-if="x.Users.length>2"> 
+     <ul>
+			<li style="float:left; width:150px; padding:10px" ng-repeat="user in x.Users">
+            <a ng-click="viewUser(user.userId)">
+            <img class="profile-picture" src="{{user.userPic}}" width="70%">
+        		<p>{{user.userName | nl2br}}</p>
+             </a>
+             	<p>
+        <a ui-sref="post({postId: post.id})" class="subdued">{{ post.likeCount}} Likes</a>
+        <a ui-sref="post({postId: post.id})" class="subdued">{{ post.commentCount}} Comments</a>
+      </p>
+        </li>
+			
+		</ul></ion-scroll>
+        
+        <div ng-if="x.Users.length<3"> 
+     <ul>
+			<li ng-click="viewUser(user.userId)" style="float:left; width:150px; padding:10px" ng-repeat="user in x.Users"><img class="profile-picture" src="{{user.userPic}}" width="70%">
+        <p>{{ post.content | nl2br}}</p>
+        <p>{{user.userName | nl2br}}</p>
+        
+        <p>
+        <a ui-sref="post({postId: post.id})" class="subdued">{{ post.likeCount}} Likes</a>
+        <a ui-sref="post({postId: post.id})" class="subdued">{{ post.commentCount}} Comments</a>
+      </p>
+        </li>
+			
+		</ul></div>
+        </div>
+        
+   
+
+    <div class="item tabs tabs-secondary tabs-icon-left">
+      <a class="tab-item" ng-click="toggleLike(post)">
+        <i class="icon ion-thumbsup" ng-if="!post.liked"></i>
+        <i class="icon ion-thumbsup positive" ng-if="post.liked"></i>
+      </a>
+      <a class="tab-item" ui-sref="post({postId: post.id})">
+        <i class="icon ion-chatbox"></i>
+      </a>
+      <a class="tab-item" href="#">
+        <i class="icon ion-share"></i>
+      </a>
+    </div>
+    </div>
+  </div>
+
+  </ion-content>
+</ion-view>

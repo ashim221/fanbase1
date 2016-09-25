@@ -1,0 +1,45 @@
+<!--
+  This template loads for the 'wall_posts' state (app.js)
+  'posts' is a $scope variable come from Home controller
+-->
+<ion-view view-title="Wall posts">
+  <ion-content class="">
+
+  <div class="list">
+
+    <div class="item item-avatar" ng-repeat="post in posts">
+        <img class="profile-picture" src="{{ post.face }}" alt=""/>
+
+        <a ui-sref="user({userId: id})" class="post-author">
+          {{ post.name }}
+        </a>
+
+        <div class="post-content">
+          <div ng-click="viewPost(post.id)">
+            <img class="full-image" ng-if="post.image" src="{{ post.image }}">
+            <p>{{ post.content | nl2br}}</p>
+          </div>
+          <p>
+            <a ng-click="toggleLike(post)" class="subdued">
+              <i class="ion-heart assertive" ng-if="post.liked"></i>
+              <i class="ion-heart" ng-if="!post.liked"></i>
+              {{ post.likeCount}}
+            </a>
+            <a ui-sref="post({postId: post.id})" class="subdued">
+              <i class="ion-chatbox positive"></i>
+              {{ post.commentCount}}
+            </a>
+            <span class="post-time">
+              <i class="ion-ios-timer-outline"></i>
+              {{ post.time }}
+            </span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  </ion-content>
+</ion-view>
