@@ -1,17 +1,5 @@
 angular.module('starter.services', ["ngStorage"])
-.service('sessionService',function(localStorage){
-return {
-   set:function(key,value){
-      return localStorage.set(key, val);
-   },
-   get:function(key){
-      return localStorage.get(key);
-   },
-   destroy:function(key){
-      return localStorage.destroy(key);
-   },
- };
-})
+
 
 .service('UserService', function($http, $httpParamSerializerJQLike) {
   // For the purpose of this example I will store user data on ionic local storage but you should save it on a database
@@ -139,7 +127,7 @@ return {
       }
     };
   })
-.service('AuthService', function($q, $http, $httpParamSerializerJQLike, $cookies, $rootScope, $cookieStore, sessionService){
+.service('AuthService', function($q, $http, $httpParamSerializerJQLike, $cookies, $rootScope, $cookieStore){
 	
 	var auth={
 		data:{
@@ -176,61 +164,8 @@ return {
 })
       };*/
 	  
-  this.getUser=function(token){
-    var deferred = $q.defer();
-	$http.get("https://fanbaseapp.com/auth.php?token="+token).success(function (response) {
-	if (!response.errors)
-	{
-		auth.data.user = response.data;
-		console.log (auth.data.user);
-		deferred.resolve(response.data);
-	}
-	else
-	{
-		var errors_list = [],
-            error = {
-              code: response.errors['0'].code,
-              msg: response.errors['0'].message
-            };
-        errors_list.push(error);
-        deferred.reject(errors_list);
-	}
-});
-    return deferred.promise;
-  };
-  
-  this.doLogin=function(user){
-    var deferred = $q.defer();
-	$http({
-  method: 'POST',
-  url: 'https://fanbaseapp.com/authorise_users.php',
-  data: $httpParamSerializerJQLike({
-      "email":user.email,
-      "password":user.password
-  }),
-  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-}).success(function (response) {
-	if (!response.errors)
-	{
-		auth.data.header = {headers: {'token': response.data.token}};
-		sessionService.set('token', response.data.token);
-		$cookies.put("token", response.data.token, 365);
-		auth.data.user = response.data;
-		console.log (auth.data.user);
-		deferred.resolve(response.data);
-	}
-	else
-	{
-		var errors_list = [],
-            error = {
-              code: response.errors['0'].code,
-              msg: response.errors['0'].message
-            };
-        errors_list.push(error);
-        deferred.reject(errors_list);
-	}
-});
-    return deferred.promise;
+  this.getUser1=function(){
+    return JSON.parse(window.localStorage.user1 || '{}');
   };
   
   this.fbLogin=function(user){
@@ -303,6 +238,40 @@ return {
 		auth.data.header = {headers: {'token': response.data.token}};
 		$cookies.put("token", response.data.token, 365);
 		auth.data.user = response.data;
+		console.log (auth.data.user);
+		deferred.resolve(response.data);
+	}
+	else
+	{
+		var errors_list = [],
+            error = {
+              code: response.errors['0'].code,
+              msg: response.errors['0'].message
+            };
+        errors_list.push(error);
+        deferred.reject(errors_list);
+	}
+});
+    return deferred.promise;
+  };
+    
+this.doLogin = function(user){
+    var deferred = $q.defer();
+	$http({
+  method: 'POST',
+  url: 'https://fanbaseapp.com/authorise_users.php',
+  data: $httpParamSerializerJQLike({
+      "email":user.email,
+      "password":user.password
+  }),
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).success(function (response) {
+	if (!response.errors)
+	{
+		auth.data.header = {headers: {'token': response.data.token}};
+		$cookies.put("token", response.data.token, 365);
+		auth.data.user = response.data;
+		window.localStorage.user = JSON.stringify(auth.data.user);
 		console.log (auth.data.user);
 		deferred.resolve(response.data);
 	}

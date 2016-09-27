@@ -147,7 +147,7 @@ angular.module('starter.controllers', [])
   $ionicSideMenuDelegate.canDragContent(false);
 })
 // Home controller
-.controller('HomeCtrl', function($scope, Posts, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $cookies, sessionService) {
+.controller('HomeCtrl', function($scope, Posts, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope) {
 	$state.reload();
   // view user
   $scope.viewUser = function(userId) {
@@ -177,11 +177,11 @@ angular.module('starter.controllers', [])
     $state.go('post', {postId: postId});
   }
 
-  $scope.token = $cookies.get("token");
-  $scope.token = sessionService.get("token");
-  console.log($scope.token);
-  $scope.user1 = AuthService.getUser($scope.token);
-
+  $rootScope.me =  JSON.parse(window.localStorage.user || '{}');
+  
+  console.log($rootScope.me);
+  //$scope.user1 = AuthService.getUser();
+	//console.log($scope.user1);
 	 $scope.showLogOutMenu = function() {
 		var hideSheet = $ionicActionSheet.show({
 			destructiveText: 'Logout',
