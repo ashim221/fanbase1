@@ -186,7 +186,8 @@ angular.module('starter.services', ["ngStorage"])
 	{
 		auth.data.header = {headers: {'token': response.data.token}};
 		$cookies.put("token", response.data.token, 365);
-		sessionService.set('token', response.data.token);
+		window.localStorage.setItem('token', response.data.token);
+		window.localStorage.user = JSON.stringify(auth.data.user);
 		auth.data.user = response.data;
 		console.log (auth.data.user);
 		deferred.resolve(response.data);
@@ -238,6 +239,49 @@ angular.module('starter.services', ["ngStorage"])
 		auth.data.header = {headers: {'token': response.data.token}};
 		$cookies.put("token", response.data.token, 365);
 		auth.data.user = response.data;
+		window.localStorage.setItem('token', response.data.token);
+		window.localStorage.user = JSON.stringify(auth.data.user);
+		console.log (auth.data.user);
+		deferred.resolve(response.data);
+	}
+	else
+	{
+		var errors_list = [],
+            error = {
+              code: response.errors['0'].code,
+              msg: response.errors['0'].message
+            };
+        errors_list.push(error);
+        deferred.reject(errors_list);
+	}
+});
+    return deferred.promise;
+  };
+  this.userIsLoggedIn = function(){
+    var deferred = $q.defer(),
+        authService = this,
+		tok = window.localStorage.getItem('token');
+        isLoggedIn = (authService.getUser(tok) !== null);
+
+    deferred.resolve(isLoggedIn);
+
+    return deferred.promise;
+  };
+this.getUser = function(token){
+    var deferred = $q.defer();
+	$http({
+  method: 'POST',
+  url: 'https://fanbaseapp.com/auth.php',
+  data: $httpParamSerializerJQLike({
+	  "token":token
+  }),
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).success(function (response) {
+	if (!response.errors)
+	{
+		auth.data.header = {headers: {'token': response.data.token}};
+		$cookies.put("token", response.data.token, 365);
+		auth.data.user = response.data;
 		console.log (auth.data.user);
 		deferred.resolve(response.data);
 	}
@@ -271,6 +315,7 @@ this.doLogin = function(user){
 		auth.data.header = {headers: {'token': response.data.token}};
 		$cookies.put("token", response.data.token, 365);
 		auth.data.user = response.data;
+		window.localStorage.setItem('token', response.data.token);
 		window.localStorage.user = JSON.stringify(auth.data.user);
 		console.log (auth.data.user);
 		deferred.resolve(response.data);
@@ -288,10 +333,34 @@ this.doLogin = function(user){
 });
     return deferred.promise;
   };
-    
-
-  this.doLogout = function(){
-    _firebase.unauth();
+    tok = window.localStorage.getItem('token');
+	this.doLogout = function(tok){
+    var deferred = $q.defer();
+	$http({
+  method: 'POST',
+  url: 'https://fanbaseapp.com/logout.php',
+  data: $httpParamSerializerJQLike({
+      "token":token
+  }),
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).success(function (response) {
+	if (!response.errors)
+	{
+		window.localStorage.removeItem('token');
+		window.localStorage.removeItem('user');
+	}
+	else
+	{
+		var errors_list = [],
+            error = {
+              code: response.errors['0'].code,
+              msg: response.errors['0'].message
+            };
+        errors_list.push(error);
+        deferred.reject(errors_list);
+	}
+});
+    return deferred.promise;
   };
 })
 

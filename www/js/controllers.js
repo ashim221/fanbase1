@@ -22,6 +22,27 @@ angular.module('starter.controllers', [])
       $ionicLoading.hide();
     });
   };
+  
+  
+  $scope.logout = function(){
+    $ionicLoading.show({
+      template: 'Logging out ...'
+    }),
+	tok = window.localStorage.getItem('token');
+    AuthService.doLogout(tok)
+    .then(function(tok){
+      // success
+	 
+      $state.go('login');
+      $ionicLoading.hide();
+    },function(err){
+      // error
+	  console.log(err);
+      $scope.errors = err;
+      $ionicLoading.hide();
+    });
+  };
+  
   $scope.signup = function(user){
     $ionicLoading.show({
       template: 'Signing up ...'

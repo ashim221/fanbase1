@@ -67,7 +67,7 @@
 
           <!-- User profile -->
           <div class="text-center" ng-repeat = "user1 in me">
-            <a ui-sref="user({{user1.userId}})">
+            <a href="#/user/{{user1.userId}}">
               <img class="profile-picture" menu-close="" src="{{user1.userPic}}">
               <h4>{{user1.userFullName}}</h4>
             </a>

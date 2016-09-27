@@ -7,8 +7,19 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'ngCordova' ,'starter.controllers', 'starter.services', 'nl2br', 'monospaced.elastic', 'ngSanitize', 'ngStorage', 'ngCookies'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, AuthService, $state) {
   $ionicPlatform.ready(function() {
+	   AuthService.userIsLoggedIn().then(function(response)
+    {
+      if(response === true)
+      {
+        $state.go('home');
+      }
+      else
+      {
+        $state.go('login');
+      }
+    });
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
