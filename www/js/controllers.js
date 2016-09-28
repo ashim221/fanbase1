@@ -2,8 +2,8 @@ angular.module('starter.controllers', [])
 
 // Authentication controller
 // Put your login, register functions here
-.controller('AuthCtrl', function($scope, $ionicHistory, $ionicSideMenuDelegate, $q, UserService, $ionicLoading, AuthService, $state, $cookies) {
-	
+.controller('AuthCtrl', function($scope, $ionicHistory, $ionicSideMenuDelegate, $q, UserService, $ionicLoading, AuthService, $state, $cookies, $rootScope, $location) {
+	$state.reload();
   $scope.login = function(user){
     $ionicLoading.show({
       template: 'Logging in ...'
@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
     .then(function(user){
       // success
 	 
-      $state.go('home');
+      $state.go('home',{}, {reload:true});
       $ionicLoading.hide();
     },function(err){
       // error
@@ -32,8 +32,8 @@ angular.module('starter.controllers', [])
     AuthService.doLogout(tok)
     .then(function(tok){
       // success
-	 
-      $state.go('login');
+       window.localStorage.user = {};
+      $state.go('login',{}, {reload:true});
       $ionicLoading.hide();
     },function(err){
       // error
@@ -166,10 +166,33 @@ angular.module('starter.controllers', [])
 
   // disabled swipe menu
   $ionicSideMenuDelegate.canDragContent(false);
+	  
+  $scope.logout = function(token){
+    $ionicLoading.show({
+      template: 'Logging out ...'
+    }),
+    AuthService.doLogout(token)
+    .then(function(token){
+      // success
+	 window.localStorage.clear();
+	 window.localStorage.user = JSON.stringify();
+	 console.log(window.localStorage.user);
+      $state.go('login');
+      $ionicLoading.hide();
+    },function(err){
+      // error
+	  console.log(err);
+      $scope.errors = err;
+      $ionicLoading.hide();
+    });
+  };
 })
 // Home controller
 .controller('HomeCtrl', function($scope, Posts, $state, UserService, AuthService, $ionicActionSheet, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $rootScope) {
+	console.log($rootScope.x);
+	
 	$state.reload();
+	 $state.go('home', {}, {reload: true});
   // view user
   $scope.viewUser = function(userId) {
     $state.go('user', {userId: userId});

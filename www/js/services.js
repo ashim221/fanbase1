@@ -261,14 +261,26 @@ angular.module('starter.services', ["ngStorage"])
     var deferred = $q.defer(),
         authService = this,
 		tok = window.localStorage.getItem('token');
+		if (tok===null)
+		{
+			isLoggedIn = false;
+		}
+		else
+		{
         isLoggedIn = (authService.getUser(tok) !== null);
-
+		}
     deferred.resolve(isLoggedIn);
 
     return deferred.promise;
   };
 this.getUser = function(token){
     var deferred = $q.defer();
+	console.log(token);
+	if (token===null)
+	{
+	}
+	else
+	{
 	$http({
   method: 'POST',
   url: 'https://fanbaseapp.com/auth.php',
@@ -297,6 +309,7 @@ this.getUser = function(token){
 	}
 });
     return deferred.promise;
+	}
   };
     
 this.doLogin = function(user){
@@ -333,21 +346,23 @@ this.doLogin = function(user){
 });
     return deferred.promise;
   };
-    tok = window.localStorage.getItem('token');
-	this.doLogout = function(tok){
+   
+	this.doLogout = function(token){
     var deferred = $q.defer();
+	
 	$http({
   method: 'POST',
   url: 'https://fanbaseapp.com/logout.php',
   data: $httpParamSerializerJQLike({
-      "token":token
+      "token": token
   }),
   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 }).success(function (response) {
 	if (!response.errors)
 	{
-		window.localStorage.removeItem('token');
-		window.localStorage.removeItem('user');
+		window.localStorage.clear();
+		window.localStorage.user = JSON.stringify();
+		deferred.resolve(response.data);
 	}
 	else
 	{
